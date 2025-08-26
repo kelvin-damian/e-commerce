@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --text-primary:#0055FF;
+    --nav-list:#020817;
+}
+
+.text-primary{
+    color: var(--text-primary);
+}
+
+.nav-list{
+    color:var(--nav-list);
+}
+
+.nav-list:hover{
+    color: var(--text-primary);
+}
