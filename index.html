@@ -10,19 +10,23 @@
 </head>
 <body>
     <!-- ==================================HEADER/NAVIGATION SECTION======================================================== -->
-    <header class="sticky top-0 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header class="sticky top-0 w-full border-b header-bg backdrop-blur">
         <div class="container mx-auto px-4">
-            <div class="flex h-16 justify-between items-center">
+            <div class="flex h-16 items-center justify-between">
                 <!-- ===================================BRAND LOGO======================= -->
-                <h1 class="text-primary font-bold text-2xl">
-                    <a href="/" class="text-primary">HiDrop</a>
+                <h1 class="text-primary">
+                    <a href="/" class="text-primary text-2xl font-bold">HiDrop</a>
                 </h1>
 
                 <!-- =====================================DESKTOP SCREEN SIZE====================== -->
                 <nav class="hidden md:flex items-center font-medium">
-                    <ul class="flex list-none space-x-8">
+                    <ul class="hidden md:flex items-center list-none space-x-16 font-medium">
                         <li class="hover:text-primary">
                             <a href="#home" class="no-underline transition-colors duration-200 nav-list">Home</a>
+                        </li>
+
+                        <li class="hover:text-primary">
+                            <a href="#shop" class="no-underline transition-colors duration-200 nav-list">Shop</a>
                         </li>
     
                         <li >
@@ -39,11 +43,11 @@
 
                 <!-- =====================================SEARCH BAR DESKTOP===================================================== -->
                 <form action="" class="hidden md:flex items-center space-x-2">
-                    <div class="inline-flex justify-center ">
+                    <div class="relative inline-flex justify-center">
                         <input 
-                        type="text" 
-                        placeholder="Search Products...."
-                        class="p-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64 h-10 border rounded-md border-gray-200"
+                            type="text" 
+                            placeholder="Search Products...."
+                            class="p-2 header-bg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64 h-10 border rounded-md border-gray-200"
                         /> 
 
                         <button type="submit" class="font-medium nav-list lg:px-8 sm:px-3 px-4 py-1 absolute" style="margin-left: 13.6rem;">
@@ -62,31 +66,82 @@
                     </div> 
 
                 </form>
+
                 <!-- =======================================================CART IMAGE/BUTTON================================================= -->
-                <button type="submit">
-                    <!-- <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="24" height="124" 
-                        fill="currentColor" 
-                        class="bi bi-cart" 
-                        viewBox="0 0 16 16"
-                        class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
-                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                    </svg> -->
-                    
-                    <img 
-                        src="./asset/images/shopping-cart_4288287.png" 
-                        alt="shopping cart image" 
-                        width="32" 
-                        height="32"
-                        class="text-sm hover:bg-yellow-200 border-white rounded-md p-2"
-                    >
-                </button>
+                <li class="list-none relative left-16">
+                    <button type="submit p-2">
+                        <!-- <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="24" height="124" 
+                            fill="currentColor" 
+                            class="bi bi-cart" 
+                            viewBox="0 0 16 16"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg> -->
+                        
+                        <img 
+                            src="./asset/images/shopping-cart_4288287.png" 
+                            alt="shopping cart image" 
+                            width="38" 
+                            height="38"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                        >
+                    </button>
+                </li>
 
                 <!-- =======================================MOBILE MENU BUTTON======================================================== -->
+                <button>
+                    <img 
+                        src="./asset/images/stack_15491113.png" 
+                        alt="mobile hamburger image"
+                        width="32" 
+                        height="32"
+                        class="md:hidden text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                    >
+                </button>
             </div>
         </div>
 
     </header>
+
+    <!-- =======================================HERO SECTION=============================================================== -->
+    <main class="min-h-screen">
+        <section class="hero-bg text-white">
+            <div class="container mx-auto px-4 py-24">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                        Discover Amazing Products
+                    </h1>
+
+                    <p class="text-xl mb-8 opacity-90">
+                        Shop the latest trends with unbeatable prices and exceptional quality. 
+                        Your perfect purchase is just a click away.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button type="submit" class="rounded-md text-lg px-8 py-2 bg-white nav-list inline-flex items-center justify-center font-medium gap-2 whitespace-nowrap hover:header-bg">
+                            Shop Now
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-2 h-5 w-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                            </svg>
+                        </button>
+
+                        <button type="submit" class="rounded-md text-lg px-8 py-2 bg-white text-white hover:text-blue-600 hover:bg-white inline-flex items-center justify-center font-medium gap-2 whitespace-nowrap hover:header-bg">
+                            Learn More
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </section>
+
+        <!-- ====================================FEATURES SECTION======================================================== -->
+        <section>
+            
+        </section>
+    </main>
 </body>
 </html>
