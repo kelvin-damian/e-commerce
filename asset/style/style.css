@@ -10,10 +10,15 @@
     --background: hsl(0 0% 95%);
     --backdrop_filter:blur(8px);
     --primary: 220 100% 50%;
+    --feature-text: hsl(215.4 16.3% 46.9%);
+    --foreground-text: hsl(215.4 16.3% 46.9%);
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(220 100% 60%));
-    --muted: hsl(0 0% 50%);
+    --feature-bg: hsl(210 40% 96.1%);
+    --card-bg: hsl(0 0% 100%);
+    
 }
 
+/* header background color */
 .header-bg{
     background-color: var(--background);
 }
@@ -21,6 +26,7 @@
 .text-primary{
     color: var(--text-primary);
 }
+
 
 .nav-list{
     color:var(--nav-list);
@@ -35,4 +41,31 @@
 .hero-bg{
     background: var(--gradient-primary);
 }
+
+/* features background color */
+.feature-bg{
+    background-color: var(--feature-bg);
+}
+
+/* cards */
+.card-bg{
+    background-color: var(--card-bg);
+}
+
+/* feature text color */
+.feature-text{
+    color: var(--feature-text);
+}
+
+.foreground-text{
+    color: var(--foreground-text);
+}
+
+.clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
 
