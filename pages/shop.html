@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiDrop Shop</title>
+    <!-- =================================CSS LINK=========================================== -->
+    <link rel="stylesheet" href=".././asset/style/style.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- ==================================HEADER/NAVIGATION SECTION======================================================== -->
+    <header class="sticky top-0 w-full border-b header-bg backdrop-blur z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <!-- ===================================BRAND LOGO======================= -->
+                <h1 class="text-primary">
+                    <a href="../index.html" class="text-primary text-2xl font-bold">HiDrop</a>
+                </h1>
+
+                <!-- =====================================DESKTOP SCREEN SIZE====================== -->
+                <nav class="hidden md:flex items-center font-medium">
+                    <ul class="hidden md:flex items-center list-none space-x-16 font-medium">
+                        <li class="hover:text-primary">
+                            <a href="../index.html" class="no-underline transition-colors duration-200 nav-list">Home</a>
+                        </li>
+
+                        <li class="hover:text-primary">
+                            <a href="./shop.html" class="no-underline transition-colors duration-200 nav-list">Shop</a>
+                        </li>
+    
+                        <li >
+                            <a href="./about.html" class="no-underline transition-colors duration-200 nav-list">About</a>
+                        </li>
+
+                        <li >
+                            <a href="#contact" class="no-underline transition-colors duration-200 nav-list">Contact</a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+                <!-- =====================================SEARCH BAR DESKTOP===================================================== -->
+                <form action="" class="hidden md:flex items-center space-x-2">
+                    <div class="relative inline-flex justify-center">
+                        <input
+                        id="searchInput" 
+                            type="text" 
+                            placeholder="Search Products...."
+                            class="p-2 header-bg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64 h-10 border rounded-md border-gray-200"
+                        /> 
+
+                        <button type="submit" class="font-medium nav-list lg:px-8 sm:px-3 px-4 py-1 absolute" style="margin-left: 13.6rem;">
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                id="Outline" 
+                                viewBox="0 0 24 24" 
+                                width="32" 
+                                height="32" 
+                                class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
+                                <path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
+                            </svg>
+                        </button>
+
+                    </div> 
+
+                </form>
+
+                <!-- =======================================================CART IMAGE/BUTTON================================================= -->
+                <li class="list-none relative left-16">
+                    <button type="submit p-2">
+                        <!-- <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="24" height="124" 
+                            fill="currentColor" 
+                            class="bi bi-cart" 
+                            viewBox="0 0 16 16"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg> -->
+                        
+                        <img 
+                            src="../asset/images/shopping-cart_4288287.png" 
+                            alt="shopping cart image" 
+                            width="38" 
+                            height="38"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                        >
+                    </button>
+                </li>
+
+                <!-- =======================================MOBILE MENU BUTTON======================================================== -->
+                <button>
+                    <img 
+                        src="./../asset/images/stack_15491113.png" 
+                        alt="mobile hamburger image"
+                        width="32" 
+                        height="32"
+                        class="md:hidden text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                    >
+                </button>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- ============================================SHOP SECTION======================================== -->
+    <main>
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold mb-4">Shop All Products</h1>
+                <p class="foreground-text mb-4">Discover amazing products at unbeatable prices</p>
+            </div>
+
+            <!-- ============================FILTER SECTION===================================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-1">
+                    <div class="rounded-lg border card-bg text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-6 pt-3">
+                            <div class="flex items-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter h-5 w-5 mr-2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+
+                                <h2 class="text-lg font-semibold">Filters</h2>
+                            </div>
+
+                            <!-- search component -->
+                            <div class="mb-4">
+                                <label class="text-sm font-medium mb-2 block">Search</label>
+                                <form class="flex gap-2 mb-6">
+                                    <Input
+                                        type="text"
+                                        placeholder="Search products..."
+                                        class="flex-1 h-10 rounded-md border border-input foreground-text focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                                    /> 
+                                    <button type="submit" size="sm" class="text-center text-sm font-medium bg-blue-500 border-blue rounded-md h-8 px-3 hover:bg-blue-300">
+                                        <?xml version="1.0" encoding="UTF-8"?>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            id="Outline"
+                                            fill="white" 
+                                            viewBox="0 0 24 24" 
+                                            width="32" 
+                                            height="32" 
+                                            class="p-2">
+                                            <path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <!-- category -->
+                            <div class="mb-6">
+                                <label class="text-sm font-medium mb-2 block">Category</label>
+                                <Select class="mb-6 border rounded-md w-full h-10 header-bg text-sm focus:outline-none items-center justify-between ">
+                                    <option class="feature-text">All Categories</option>
+                                    <option>electronics</option>
+                                    <option>men's clothing</option>
+                                    <option>jewelery</option>
+                                    <option>women's clothing</option>
+                                </Select>
+
+                            </div>
+
+                            <!-- price range -->
+                            <div class="mb-6">
+                                <label class="text-sm font-medium mb-2 block">Price Range</label>
+                                <div class="flex space-x-2">
+                                    <Input
+                                        type="number"
+                                        placeholder="Min"
+                                        class="rounded-md border border-input text-sm focus-visible:outline-none text-base w-20 placeholder:feature-text p-3"
+                                    />
+                                    <Input
+                                        type="number"
+                                        placeholder="Max"
+                                        class="rounded-md border border-input text-sm focus-visible:outline-none text-base w-20 placeholder:feature-text p-3"
+                                    />
+
+                                </div>
+                            </div>
+
+                            <!-- clear filter button -->
+                            <button  class="feature-text inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:bg-yellow-400 h-10 px-4 py-2 w-full">Clear Filters</button>
+                        </div>
+
+                    </div>
+
+                    <!-- ==================================VIEW ALL/FILTERD PRODUCT========================================== -->
+                    <div class="lg:col-span-3">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                            <div class="text-sm feature-text">
+                                Showing {filteredProducts.length} products
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+
+    </main>
+    
+    
+    
+    
+    
+    
+    <!-- =====================================LOGIC=============================== -->
+    <script src="./../script.js"></script>  
+</body>
+</html>

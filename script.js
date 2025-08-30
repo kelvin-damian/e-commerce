@@ -8,7 +8,7 @@ async function fetchProducts() {
         const res = await fetch(`${fakeStoreapi}/products`);
         // Parse JSON
         const data = await res.json();
-        console.log('Parsed data:', data);
+        //console.log('Parsed data:', data);
         return data;
     } catch (err) {
         console.error('Error fetching products:', err);
@@ -178,3 +178,17 @@ async function getFeaturedProducts() {
 // Call it to test
 getFeaturedProducts();
 
+//to search for products through filter system
+async function searchProducts() {
+    const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+    const products = await fetchProducts();
+
+    const filtered = products.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase))
+    ||p.description.toLowerCase().includes(searchQuery.toLowerCase()) 
+    || p.category.toLowerCase().includes(searchQuery.toLowerCase(searchQuery));
+    console.log(filtered); // Implement display if needed
+}
+
+//call to search through filter
+searchProducts();
