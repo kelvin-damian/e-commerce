@@ -20,33 +20,6 @@ async function fetchProducts() {
 
 fetchProducts();
 
-//to get categories
-async function getProductsByCategory(_categories){
-    try{
-        const res = await fetch((`${fakeStorepi}/categories`))
-
-        // Parse JSON
-        const data = await res.json();
-        return data;
-    }catch (err) {
-        console.error('Error fetching products:', err);
-        return [];
-    }
-}
-
-//to get product by id (to get a single product)
-async function getProductById(id){
-    try{
-        const response = await fetch ((`${fakeStoreapi}/products/{id}`))
-        const data = await response.json();
-        return data;
-    }
-    catch(error){
-        console.error('Error fetching product:', error);
-        return []
-    }
-}
-
 
 // get featured products
 async function getFeaturedProducts() {
@@ -275,7 +248,7 @@ function renderProducts(products){
 
 //renderProducts(products);
 
-//category filter
+//category filter to be captured in the shop template select field
 function highlightActiveCategory(activeCategory) {
     const select = document.querySelector(".filter-category-select");
   
@@ -302,10 +275,8 @@ function highlightActiveCategory(activeCategory) {
     if (select) {
       select.value = activeCategory || ""; // Default to All Categories if empty
     }
-  }
-  
-  
-
+}
+   
 // Hook category buttons to filter products
 document.querySelectorAll(".category_button button").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -333,7 +304,27 @@ document.querySelectorAll(".category_button button").forEach((btn) => {
       // Redirect to shop page with query param
       window.location.href = `/pages/shop.html?category=${encodeURIComponent(mappedCategory)}`;
     });
-  });
+});
+
+//product details and cart logic
+let cart = JSON.parse(localStorage.getItem("cart")) ||[];
+let quantity = 1;
+
+// Save cart and update cart count
+function updateCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    const cartCount = document.getElementById("cartCount");
+    if (cartCount) {
+      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+}
+
+
+// Fetch Product
+
+
+
+
   
   
 
