@@ -192,65 +192,100 @@ document.addEventListener("DOMContentLoaded", () => {
 //renderProducts(filtered);
 
 //function to fetch and display all the products
-function renderProducts(products){
+function renderProducts(products) {
     const grid = document.getElementById("allProducts");
     const count = document.getElementById("productCount");
 
-
-    if (!grid) return;
-
-    if (products.length === 0) {
-        grid.innerHTML = 
-        `<div class="rounded-lg border card-bg text-card-foreground shadow-sm">
-            <div class="flex flex-col space-y-1.5 p-6 pt-3">
-                <h3 class="text-lg font-semibold mb-2">No products found</h3>
-                <p class="foreground-text">
-                  Try adjusting your filters or search terms
-                </p>
-            </div>
-        </div
-        //<p class="col-span-full text-center text-gray-500">No products found.</p>`;
-    }else {
-        grid.innerHTML = products.map(product => `
-            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer onclick="goToProductDetail(${product.id})"">
-                <div class ="p-0">
-                    <div class="aspect-square overflow-hidden rounded-t-lg">
-                        <img 
-                            src="${product.image}" 
-                            alt="${product.title}" 
-                            class="h-screen w-screen object-cover transition-transform duration-300 group-hover:scale-105 p-0"
-                            width">
-                    </div>
-
-                </div>
-              <div class="p-4">
-                <span class="text-xs bg-blue-400 text-white px-2 py-1 rounded-full">${product.category}</span>
-                <h3 class="font-semibold text-lg mt-2 clamp-2">${product.title}</h3>
-                <p class="text-sm text-gray-600 clamp-2">${product.description}</p>
-                <div class="flex items-center mt-2">
-                  ⭐ ${product.rating.rate} (${product.rating.count})
-                </div>
-              </div>
-              <div class="p-4 flex justify-between items-center">
-                <span class="text-2xl font-bold text-blue-600">$${product.price.toFixed(2)}</span>
-                <button onclick="alert('Added ${product.title}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Add to Cart</button>
-              </div>
-            </div>
-        `).join("");
-
-        if (count) {
-            count.textContent = `Showing ${products.length} products`;
-        }
+    if (!grid) {
+        console.warn("#allProducts not found");
+        return;
     }
 
-    document.addEventListener("DOMContentLoaded", loadShopProducts);
+    if (products.length === 0) {
+        grid.innerHTML = `
+            <div class="rounded-lg border card-bg text-card-foreground shadow-sm">
+                <div class="flex flex-col space-y-1.5 p-6 pt-3">
+                    <h3 class="text-lg font-semibold mb-2">No products found</h3>
+                    <p class="foreground-text">
+                      Try adjusting your filters or search terms
+                    </p>
+                </div>
+            </div>`;
+    } else {
+        grid.innerHTML = products.map(product => {
+            if (!product.id) {
+                console.warn("Product missing ID:", product);
+                return '';
+            }
+            return `
+                <div class="product-card bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer" 
+                    data-id="${product.id}">
+                    <div class="p-0">
+                        <div class="aspect-square overflow-hidden rounded-t-lg">
+                            <img 
+                                src="${product.image}" 
+                                alt="${product.title}" 
+                                class="h-screen w-screen object-cover transition-transform duration-300 group-hover:scale-105 p-0"
+                            >
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs bg-blue-400 text-white px-2 py-1 rounded-full">${product.category}</span>
+                        <h3 class="font-semibold text-lg mt-2 clamp-2">${product.title}</h3>
+                        <p class="text-sm text-gray-600 clamp-2">${product.description}</p>
+                        <div class="flex items-center mt-2">
+                            ⭐ ${product.rating.rate} (${product.rating.count})
+                        </div>
+                    </div>
+                    <div class="p-4 flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$${product.price.toFixed(2)}</span>
+                        <button class="add-to-cart bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
 
+        // Attach click listeners for cards
+        const cards = document.querySelectorAll(".product-card");
+        cards.forEach(card => {
+            const productId = card.dataset.id;
+            if (!productId) {
+                console.warn("Missing data-id on product card");
+                return;
+            }
+            card.addEventListener("click", (e) => {
+                // Prevent add-to-cart button click from triggering navigation
+                if (e.target.classList.contains("add-to-cart")) return;
+                console.log("Navigating to product ID:", productId);
+                window.location.href = `/pages/productDetails.html?id=${productId}`;
+            });
+        });
+
+        // Attach add-to-cart listeners
+        const addButtons = document.querySelectorAll(".add-to-cart");
+        addButtons.forEach(btn => {
+            btn.addEventListener("click", e => {
+                e.stopPropagation();
+                const id = btn.dataset.id;
+                const product = allProducts.find(p => p.id == id);
+                if (product) {
+                    addToCart(product.id, product.title, product.price, product.image);
+                } else {
+                    console.warn("Product not found for ID:", id);
+                }
+            });
+        });
+    }
+
+    if (count) {
+        count.textContent = `Showing ${products.length} products`;
+    }
 }
 
 
 function goToProductDetail(id) {
     // Navigate to productDetails.html with the product id
-    window.location.href = `productDetails.html?id=${id}`;
+    window.location.href = `/pages/productDetails.html?id=${id}`;
 }
   
 //renderProducts(products);
@@ -329,45 +364,53 @@ function updateCart() {
 }
 
 
-// Fetch Product
-async function loadProductById(){
+// Fetch single Product
+async function loadProductById() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
+    console.log("URL Params ID:", id); // Should now log the clicked product ID
+
     if (!id) return;
 
     try {
         const res = await fetch(`https://fakestoreapi.com/products/${id}`);
         const product = await res.json();
-
         renderProductDetail(product);
+
         // fetch related products
         const relatedRes = await fetch(`https://fakestoreapi.com/products/category/${encodeURIComponent(product.category)}`);
         const relatedProducts = await relatedRes.json();
-        renderRelatedProducts(relatedProducts.filter(p => p.id !== product.id));
-    }catch (err) {
+        renderRelatedProducts(relatedProducts.filter(p => p.id != product.id));
+    } catch (err) {
         console.error("Error loading product:", err);
     }
 }
 
-window.onload = loadProductById;
+document.addEventListener("DOMContentLoaded", loadProductById);
+
 
 //============================function to render product details======================================//
-function renderProductDetail(product){
+function renderProductDetail(product) {
     const container = document.getElementById("productDetails");
-
-    container.innerHTML =`
-    <div class="aspect-square overflow-hidden rounded-lg bg-muted prod_img">
-        <!-- Product Image -->
+    if (!container) {
+      console.warn("#productDetails not found");
+      return;
+    }
+  
+    // IMPORTANT: backticks + class (not className)
+    const safeTitle = String(product.title).replace(/'/g, "\\'");
+    container.innerHTML = `
+      <!-- left: image -->
+      <div class="aspect-square overflow-hidden rounded-lg bg-gray-100">
         <img
-            src=${product.image}
-            alt=${product.title}
-            className="h-full w-full object-cover"
+          src="${product.image}"
+          alt="${product.title}"
+          class="h-full w-full object-contain"
         />
-
-    </div>
-
-    <!-- product info -->
-    <div class="space-y-6">
+      </div>
+  
+      <!-- right: info -->
+      <div class="space-y-6">
         <div>
           <span class="inline-block bg-gray-200 text-gray-700 px-3 py-1 rounded mb-2">
             ${product.category}
@@ -375,59 +418,49 @@ function renderProductDetail(product){
           <h1 class="text-3xl font-bold mb-4">${product.title}</h1>
           ${renderRating(product.rating)}
         </div>
-
+  
         <div class="text-4xl font-bold text-blue-600">
           $${product.price.toFixed(2)}
         </div>
-
+  
         <p class="text-gray-600 text-lg leading-relaxed">
           ${product.description}
         </p>
-
-        <!--=======quantity selector-->
-        <div class="flex items-center space-x-4">
-            <span class="font-medium">Quantity:</span>
-            <div class="flex items-center border rounded-md">
-                <button onclick="changeQuantity(-1)" 
-                    class="px-3 py-2 hover:bg-gray-100">-
-                </button>
-
-                <span id="quantityDisplay" class="px-4 py-2 font-medium">${currentQuantity}</span>
-                <button onclick="changeQuantity(1)" 
-                    class="px-3 py-2 hover:bg-gray-100">+
-                </button>
-            </div>
+  
+        <!-- Quantity -->
+        <div class="flex items-center gap-4">
+          <span class="font-medium">Quantity:</span>
+          <div class="flex items-center border rounded-md">
+            <button onclick="changeQuantity(-1)" class="px-3 py-2 hover:bg-gray-100">-</button>
+            <span id="quantityDisplay" class="px-4 py-2 font-medium">${currentQuantity}</span>
+            <button onclick="changeQuantity(1)" class="px-3 py-2 hover:bg-gray-100">+</button>
+          </div>
         </div>
-
-        <!-- Add to Cart -->
-        <div class="flex space-x-4">
-            <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.image}')"
-                class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-                🛒 Add to Cart
-            </button>
-
-            <button class="border px-6 py-3 rounded-lg hover:bg-gray-100">
-                Buy Now
-            </button>
+  
+        <!-- Actions -->
+        <div class="flex gap-4">
+          <button
+            onclick="addToCart(${product.id}, '${safeTitle}', ${product.price}, '${product.image}')"
+            class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+            🛒 Add to Cart
+          </button>
+          <button class="border px-6 py-3 rounded-lg hover:bg-gray-100">
+            Buy Now
+          </button>
         </div>
-
-        <!-- Product Features -->
+  
+        <!-- Features -->
         <div class="border rounded-lg p-6">
-            <h3 class="font-semibold mb-4">Product Features</h3>
-            <ul class="space-y-2 text-gray-600">
-                <li>✓ High quality materials</li>
-                <li>✓ Fast and secure shipping</li>
-                <li>✓ 30-day return policy</li>
-                <li>✓ Customer satisfaction guaranteed</li>
-            </ul>
+          <h3 class="font-semibold mb-4">Product Features</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>✓ High quality materials</li>
+            <li>✓ Fast and secure shipping</li>
+            <li>✓ 30-day return policy</li>
+            <li>✓ Customer satisfaction guaranteed</li>
+          </ul>
         </div>
-
-    </div>
-
-
-  `;
-
-  //document.addEventListener("DOMContentLoaded", loadProductById);
+      </div>
+    `;
 }
 
 ////Function to render ratings in star image
@@ -450,32 +483,33 @@ function renderRating(rating) {
 
 //===============funtion to display related products//
 function renderRelatedProducts(products) {
-    const container = document.getElementById("relatedProducts");
-
-    container.innerHTML =`
-    ${products
-        .map(
-          (p) => `
-          <div class="border rounded-lg shadow-sm bg-white hover:shadow-lg transition p-4">
-            <img 
-                src="${p.image}" 
-                alt="${p.title}" 
-                class="h-40 mx-auto object-contain mb-4" 
-            />
-            <h3 class="font-semibold truncate">${p.title}</h3>
-            <p class="text-blue-600 font-bold">$${p.price.toFixed(2)}</p>
-            <button onclick="window.location.href='product.html?id=${p.id}'"
-              class="mt-2 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    const slot = document.getElementById("relatedProducts");
+    if (!slot) return;
+    slot.innerHTML = `
+      <h2 class="text-2xl font-bold mb-6">Related Products</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        ${products.map(p => `
+          <div class="bg-white border rounded-lg shadow-sm p-4 hover:shadow-lg transition">
+            <img src="${p.image}" alt="${p.title}" class="h-40 mx-auto object-contain mb-3" />
+            <h3 class="font-semibold line-clamp-2 mb-1">${p.title}</h3>
+            <p class="text-blue-600 font-bold mb-3">$${p.price.toFixed(2)}</p>
+            <button
+              class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              onclick="window.location.href='productDetails.html?id=${p.id}'">
               View
             </button>
           </div>
-        `
-        )
-        .join("")}
+        `).join("")}
+      </div>
     `;
-    
-
 }
+  
+// init
+document.addEventListener("DOMContentLoaded", () => {
+    updateCart();       // show persisted cart count in header
+    loadProductById();  // fetch and render product
+    loadShopProducts();
+});
 
 //function to add quantity
 function changeQuantity(amount) {
