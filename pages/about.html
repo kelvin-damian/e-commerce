@@ -42,7 +42,7 @@
                 </nav>
 
                 <!-- =====================================SEARCH BAR DESKTOP===================================================== -->
-                <form action="" class="hidden md:flex items-center space-x-2">
+                <form onsubmit="return searchProducts(event)" action="" class="hidden md:flex items-center space-x-2">
                     <div class="relative inline-flex justify-center">
                         <input
                             id="searchInput"
@@ -51,7 +51,7 @@
                             class="p-2 header-bg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64 h-10 border rounded-md border-gray-200"
                         /> 
 
-                        <button type="submit" class="font-medium nav-list lg:px-8 sm:px-3 px-4 py-1 absolute" style="margin-left: 13.6rem;">
+                        <button type="submit" onclick="searchProducts()" class="font-medium nav-list lg:px-8 sm:px-3 px-4 py-1 absolute" style="margin-left: 13.6rem;">
                             <?xml version="1.0" encoding="UTF-8"?>
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 

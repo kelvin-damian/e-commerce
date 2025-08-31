@@ -1,6 +1,8 @@
 //API URL
 const fakeStoreapi = 'https://fakestoreapi.com';
-const platziApi = 'https://api.escuelajs.co/api/v1';
+//const platziApi = 'https://api.escuelajs.co/api/v1';
+
+let allProducts = [];
 
 // get products
 async function fetchProducts() {
@@ -124,27 +126,90 @@ function searchProducts(event) {
     return false;
 }
 
-//to get the searched item from the header item
-async function loadShopProducts(){
+
+// Load all products and apply search query (from URL if exists)
+async function loadShopProducts() {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("q")?.toLowerCase() || "";
-
-    let products = await fetchProducts();
-    let filtered = products;
-
-    // if query exists, filter by title, description, or category
+  
+    allProducts = await fetchProducts();
+  
+    // initial filter with query
+    let filtered = allProducts;
     if (query) {
-        filtered = products.filter(p =>
-        p.title.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query) ||
-        p.category.toLowerCase().includes(query)
-        );
+      filtered = allProducts.filter(
+        (p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
+      );
     }
+  
     renderProducts(filtered);
 }
 
 loadShopProducts();
 
+// Apply filters from the shop page UI
+function applyFilters() {
+    let filtered = [...allProducts];
+  
+    // Text search (shop filter form input)
+    const searchText = document.querySelector("#filterSearch")?.value.toLowerCase();
+    if (searchText) {
+      filtered = filtered.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchText) ||
+          p.description.toLowerCase().includes(searchText) ||
+          p.category.toLowerCase().includes(searchText)
+      );
+    }
+  
+    // Category filter
+    const category = document.querySelector("#filterCategory")?.value;
+    if (category && category !== "") {
+      filtered = filtered.filter((p) => p.category === category);
+    }
+  
+    // Price range filter
+    const minPrice = parseFloat(document.querySelector("#minPrice")?.value || 0);
+    const maxPrice = parseFloat(document.querySelector("#maxPrice")?.value || Infinity);
+    filtered = filtered.filter((p) => p.price >= minPrice && p.price <= maxPrice);
+  
+    renderProducts(filtered);
+}
+
+// Hook events to UI
+document.addEventListener("DOMContentLoaded", () => {
+    loadShopProducts();
+  
+    // Shop page search form
+    document.getElementById("shopFilterForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      applyFilters();
+    });
+
+    // Category dropdown
+  document.getElementById("filterCategory")?.addEventListener("change", applyFilters);
+
+  // Price range inputs
+  document.getElementById("minPrice")?.addEventListener("input", applyFilters);
+  document.getElementById("maxPrice")?.addEventListener("input", applyFilters);
+
+  // Clear filters
+  document.getElementById("clearFilters")?.addEventListener("click", () => {
+    document.getElementById("filterSearch").value = "";
+    document.getElementById("filterCategory").value = "";
+    document.getElementById("minPrice").value = "";
+    document.getElementById("maxPrice").value = "";
+    renderProducts(allProducts);
+  });
+});
+
+//to call the filtered product
+//renderProducts(filtered);
+
+//function to fetch and display all the products
 function renderProducts(products){
     const grid = document.getElementById("allProducts");
     const count = document.getElementById("productCount");
@@ -199,5 +264,9 @@ function renderProducts(products){
     document.addEventListener("DOMContentLoaded", loadShopProducts);
 }
 
-renderProducts(products);
+//renderProducts(products);
+
+
+
+
 
