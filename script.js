@@ -681,6 +681,122 @@ function renderCart() {
     `).join('');
 }
 
+function renderCheckout() {
+    const emptyCheckoutDiv = document.getElementById('emptyCheckout');
+    const checkoutContentDiv = document.getElementById('checkoutContent');
+    const orderItemsDiv = document.getElementById('orderItems');
+    const itemCountSummary = document.getElementById('itemCountSummary');
+    const subtotalSpan = document.getElementById('subtotal');
+    const taxSpan = document.getElementById('tax');
+    const totalSpan = document.getElementById('total');
+
+    if (!orderItemsDiv || !emptyCheckoutDiv || !checkoutContentDiv) {
+        console.debug("Checkout elements not found; likely not on checkout.html");
+        return;
+    }
+
+    if (cart.length === 0) {
+        emptyCheckoutDiv.classList.remove('hidden');
+        checkoutContentDiv.classList.add('hidden');
+        return;
+    }
+
+    emptyCheckoutDiv.classList.add('hidden');
+    checkoutContentDiv.classList.remove('hidden');
+
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const tax = subtotal * 0.08;
+    const total = subtotal + tax;
+
+    orderItemsDiv.innerHTML = cart.map(item => `
+        <div class="flex justify-between items-start">
+            <div class="flex-1">
+                <p class="font-medium text-sm">${item.title}</p>
+                <p class="text-xs text-gray-500">Qty: ${item.quantity}</p>
+            </div>
+            <p class="font-medium">$${(item.price * item.quantity).toFixed(2)}</p>
+        </div>
+    `).join('');
+
+    itemCountSummary.textContent = `Subtotal (${itemCount} items)`;
+    subtotalSpan.textContent = `$${subtotal.toFixed(2)}`;
+    taxSpan.textContent = `$${tax.toFixed(2)}`;
+    totalSpan.textContent = `$${total.toFixed(2)}`;
+
+    // Toggle shipping form visibility
+    const sameAsShippingCheckbox = document.getElementById('sameAsShipping');
+    const shippingForm = document.getElementById('shippingForm');
+    if (sameAsShippingCheckbox && shippingForm) {
+        sameAsShippingCheckbox.addEventListener('change', () => {
+            shippingForm.classList.toggle('hidden', sameAsShippingCheckbox.checked);
+            // Clear shipping inputs when hidden
+            if (sameAsShippingCheckbox.checked) {
+                ['shippingFirstName', 'shippingLastName', 'shippingAddress', 'shippingCity', 'shippingState', 'shippingZipCode'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+                document.getElementById('shippingCountry').value = 'US';
+            }
+        });
+    }
+
+    // Disable/enable Place Order button during processing
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    placeOrderBtn.addEventListener('click', () => {
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = 'Processing...';
+    });
+}
+
+function handleCheckout(event) {
+    event.preventDefault();
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const sameAsShipping = document.getElementById('sameAsShipping').checked;
+
+    // Basic form validation
+    const requiredFields = ['email', 'firstName', 'lastName', 'address', 'city', 'state', 'zipCode', 'phone', 'cardName', 'cardNumber', 'expiryDate', 'cvv'];
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (!input.value.trim()) {
+            isValid = false;
+            input.classList.add('border-red-600');
+        } else {
+            input.classList.remove('border-red-600');
+        }
+    });
+
+    if (!sameAsShipping) {
+        const shippingFields = ['shippingFirstName', 'shippingLastName', 'shippingAddress', 'shippingCity', 'shippingState', 'shippingZipCode'];
+        shippingFields.forEach(field => {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                isValid = false;
+                input.classList.add('border-red-600');
+            } else {
+                input.classList.remove('border-red-600');
+            }
+        });
+    }
+
+    if (!isValid) {
+        alert('Please fill in all required fields.');
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Order';
+        return;
+    }
+
+    // Simulate order processing
+    setTimeout(() => {
+        clearCart();
+        alert('Order placed successfully!');
+        window.location.href = 'index.html'; // Redirect to home (no order-confirmation.html)
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = 'Place Order';
+    }, 2000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     updateCart();
     const currentPath = window.location.pathname;
@@ -699,6 +815,8 @@ document.addEventListener("DOMContentLoaded", () => {
         loadProductById();
     } else if (currentPath.includes("cart.html")) {
         renderCart();
+    } else if (currentPath.includes("checkout.html")) {
+        renderCheckout();
     }
 });
 
