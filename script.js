@@ -58,7 +58,7 @@ async function getFeaturedProducts() {
         if (grid) {
             grid.innerHTML = featured.map(product => `
                   
-                <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group">
+                <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer">
                     <div class ="p-0">
                         <div class="aspect-square overflow-hidden rounded-t-lg">
                             <img 
@@ -131,6 +131,7 @@ function searchProducts(event) {
 async function loadShopProducts() {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get("q")?.toLowerCase() || "";
+    const category = urlParams.get("category") || "";
   
     allProducts = await fetchProducts();
   
@@ -144,6 +145,14 @@ async function loadShopProducts() {
           p.category.toLowerCase().includes(query)
       );
     }
+
+    // Apply category filter from URL
+  if (category) {
+    filtered = filtered.filter((p) => p.category === category);
+  }
+
+    // Highlight active category button from index.html
+    highlightActiveCategory(category);
   
     renderProducts(filtered);
 }
@@ -230,7 +239,7 @@ function renderProducts(products){
         //<p class="col-span-full text-center text-gray-500">No products found.</p>`;
     }else {
         grid.innerHTML = products.map(product => `
-            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group">
+            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer">
                 <div class ="p-0">
                     <div class="aspect-square overflow-hidden rounded-t-lg">
                         <img 
@@ -265,6 +274,68 @@ function renderProducts(products){
 }
 
 //renderProducts(products);
+
+//category filter
+function highlightActiveCategory(activeCategory) {
+    const select = document.querySelector(".filter-category-select");
+  
+    document.querySelectorAll(".category_button button").forEach((btn) => {
+      const btnCategory = btn.textContent.trim().toLowerCase();
+      let mappedCategory;
+      switch (btnCategory) {
+        case "electronics": mappedCategory = "electronics"; break;
+        case "jewelry": mappedCategory = "jewelery"; break;
+        case "men clothing": mappedCategory = "men's clothing"; break;
+        case "women clothing": mappedCategory = "women's clothing"; break;
+        default: mappedCategory = "";
+      }
+  
+      // Highlight button
+      if (mappedCategory === activeCategory) {
+        btn.classList.add("bg-blue-500", "text-white");
+      } else {
+        btn.classList.remove("bg-blue-500", "text-white");
+      }
+    });
+  
+    // Update the select dropdown value
+    if (select) {
+      select.value = activeCategory || ""; // Default to All Categories if empty
+    }
+  }
+  
+  
+
+// Hook category buttons to filter products
+document.querySelectorAll(".category_button button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const categoryText = btn.textContent.trim().toLowerCase();
+  
+      // Map button text to API category values
+      let mappedCategory;
+      switch (categoryText) {
+        case "electronics":
+          mappedCategory = "electronics";
+          break;
+        case "jewelry":
+          mappedCategory = "jewelery"; // API spelling
+          break;
+        case "men clothing":
+          mappedCategory = "men's clothing";
+          break;
+        case "women clothing":
+          mappedCategory = "women's clothing";
+          break;
+        default:
+          mappedCategory = "";
+      }
+  
+      // Redirect to shop page with query param
+      window.location.href = `/pages/shop.html?category=${encodeURIComponent(mappedCategory)}`;
+    });
+  });
+  
+  
 
 
 

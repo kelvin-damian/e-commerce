@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product details</title>
+    <!-- =================================CSS LINK=========================================== -->
+    <link rel="stylesheet" href=".././asset/style/style.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+     <!-- ==================================HEADER/NAVIGATION SECTION======================================================== -->
+     <header class="sticky top-0 w-full border-b header-bg backdrop-blur z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <!-- ===================================BRAND LOGO======================= -->
+                <h1 class="text-primary">
+                    <a href="../index.html" class="text-primary text-2xl font-bold">HiDrop</a>
+                </h1>
+
+                <!-- =====================================DESKTOP SCREEN SIZE====================== -->
+                <nav class="hidden md:flex items-center font-medium">
+                    <ul class="hidden md:flex items-center list-none space-x-16 font-medium">
+                        <li class="hover:text-primary">
+                            <a href="../index.html" class="no-underline transition-colors duration-200 nav-list">Home</a>
+                        </li>
+
+                        <li class="hover:text-primary">
+                            <a href="./shop.html" class="no-underline transition-colors duration-200 nav-list">Shop</a>
+                        </li>
+    
+                        <li >
+                            <a href="./about.html" class="no-underline transition-colors duration-200 nav-list">About</a>
+                        </li>
+
+                        <li >
+                            <a href="#contact" class="no-underline transition-colors duration-200 nav-list">Contact</a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+                <!-- =====================================SEARCH BAR DESKTOP===================================================== -->
+                <form onsubmit="return searchProducts(event)" action="" class="hidden md:flex items-center space-x-2">
+                    <div class="relative inline-flex justify-center">
+                        <input
+                            id="searchInput"
+                            type="text" 
+                            placeholder="Search Products...."
+                            class="p-2 header-bg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64 h-10 border rounded-md border-gray-200"
+                        /> 
+
+                        <button type="submit" onclick="searchProducts()" class="font-medium nav-list lg:px-8 sm:px-3 px-4 py-1 absolute" style="margin-left: 13.6rem;">
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                id="Outline" 
+                                viewBox="0 0 24 24" 
+                                width="32" 
+                                height="32" 
+                                class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
+                                <path d="M23.707,22.293l-5.969-5.969a10.016,10.016,0,1,0-1.414,1.414l5.969,5.969a1,1,0,0,0,1.414-1.414ZM10,18a8,8,0,1,1,8-8A8.009,8.009,0,0,1,10,18Z"/>
+                            </svg>
+                        </button>
+
+                    </div> 
+
+                </form>
+
+                <!-- =======================================================CART IMAGE/BUTTON================================================= -->
+                <li class="list-none relative left-16">
+                    <button type="submit p-2">
+                        <!-- <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="24" height="124" 
+                            fill="currentColor" 
+                            class="bi bi-cart" 
+                            viewBox="0 0 16 16"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                        </svg> -->
+                        
+                        <img 
+                            src="../asset/images/shopping-cart_4288287.png" 
+                            alt="shopping cart image" 
+                            width="38" 
+                            height="38"
+                            class="text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                        >
+                    </button>
+                </li>
+
+                <!-- =======================================MOBILE MENU BUTTON======================================================== -->
+                <button>
+                    <img 
+                        src="./../asset/images/stack_15491113.png" 
+                        alt="mobile hamburger image"
+                        width="32" 
+                        height="32"
+                        class="md:hidden text-sm hover:bg-yellow-200 border-white rounded-md p-2"
+                    >
+                </button>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- ===================================================================================== -->
+    
+</body>
+</html>
