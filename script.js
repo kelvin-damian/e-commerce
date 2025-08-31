@@ -566,6 +566,143 @@ function addToCart(id, title, price, image) {
 }
 
 
+function updateQuantity(id, newQuantity) {
+    const item = cart.find(item => item.id === id);
+    if (!item) return;
+    if (newQuantity <= 0) {
+        removeItem(id);
+        alert('Item removed from cart');
+    } else {
+        item.currentQuantity = newQuantity;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+        updateCart();
+    }
+}
+
+function removeItem(id) {
+    const item = cart.find(item => item.id === id);
+    if (!item) return;
+    cart = cart.filter(item => item.id !== id);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCart();
+    alert(`${item.title} removed from cart`);
+}
+
+function clearCart() {
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCart();
+    alert('Cart cleared');
+}
+
+function renderCart() {
+    const emptyCartDiv = document.getElementById('emptyCart');
+    const cartContentDiv = document.getElementById('cartContent');
+    const cartItemsDiv = document.getElementById('cartItems');
+    const itemCountSpan = document.getElementById('itemCount');
+    const itemCountSummary = document.getElementById('itemCountSummary');
+    const subtotalSpan = document.getElementById('subtotal');
+    const taxSpan = document.getElementById('tax');
+    const totalSpan = document.getElementById('total');
+
+    if (!cartItemsDiv || !emptyCartDiv || !cartContentDiv) {
+        console.debug("Cart elements not found; likely not on cart.html");
+        return;
+    }
+
+    if (cart.length === 0) {
+        emptyCartDiv.classList.remove('hidden');
+        cartContentDiv.classList.add('hidden');
+        return;
+    }
+
+    emptyCartDiv.classList.add('hidden');
+    cartContentDiv.classList.remove('hidden');
+
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const tax = subtotal * 0.08;
+    const total = subtotal + tax;
+
+    itemCountSpan.textContent = `${itemCount} ${itemCount === 1 ? 'item' : 'items'} in your cart`;
+    itemCountSummary.textContent = `Subtotal (${itemCount} items)`;
+    subtotalSpan.textContent = `$${subtotal.toFixed(2)}`;
+    taxSpan.textContent = `$${tax.toFixed(2)}`;
+    totalSpan.textContent = `$${total.toFixed(2)}`;
+
+    cartItemsDiv.innerHTML = cart.map(item => `
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="w-full md:w-32 h-32 flex-shrink-0">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover rounded-md">
+                </div>
+                <div class="flex-1 space-y-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-semibold text-lg">
+                                <a href="/pages/productDetails.html?id=${item.id}" class="hover:text-blue-600 transition-colors">${item.title}</a>
+                            </h3>
+                            <p class="text-sm text-gray-500 capitalize">${item.category}</p>
+                        </div>
+                        <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-medium">Quantity:</span>
+                            <div class="flex items-center border rounded-md">
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" class="px-3 py-2 hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+                                    </svg>
+                                </button>
+                                <span class="px-4 py-2 font-medium">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" class="px-3 py-2 hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m6-6H6" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-blue-600">$${(item.price * item.quantity).toFixed(2)}</div>
+                            <div class="text-sm text-gray-500">$${item.price.toFixed(2)} each</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateCart();
+    const currentPath = window.location.pathname;
+    console.log("Current path:", currentPath);
+
+    if (currentPath.includes("index.html") || currentPath === "/") {
+        getFeaturedProducts();
+        loadCategories();
+    } else if (currentPath.includes("shop.html")) {
+        loadShopProducts();
+        document.querySelector("#filterSearch")?.addEventListener("input", applyFilters);
+        document.querySelector("#filterCategory")?.addEventListener("change", applyFilters);
+        document.querySelector("#minPrice")?.addEventListener("input", applyFilters);
+        document.querySelector("#maxPrice")?.addEventListener("input", applyFilters);
+    } else if (currentPath.includes("productDetails.html")) {
+        loadProductById();
+    } else if (currentPath.includes("cart.html")) {
+        renderCart();
+    }
+});
+
+
 
 
 
