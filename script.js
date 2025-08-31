@@ -149,6 +149,7 @@ function renderProducts(products){
     const grid = document.getElementById("allProducts");
     const count = document.getElementById("productCount");
 
+
     if (!grid) return;
 
     if (products.length === 0) {
@@ -164,10 +165,17 @@ function renderProducts(products){
         //<p class="col-span-full text-center text-gray-500">No products found.</p>`;
     }else {
         grid.innerHTML = products.map(product => `
-            <div class="bg-white border rounded-lg shadow-sm hover:shadow-lg transition-all duration-300">
-              <div class="aspect-square overflow-hidden rounded-t-lg">
-                <img src="${product.image}" alt="${product.title}" class="h-full w-full object-contain p-4">
-              </div>
+            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group">
+                <div class ="p-0">
+                    <div class="aspect-square overflow-hidden rounded-t-lg">
+                        <img 
+                            src="${product.image}" 
+                            alt="${product.title}" 
+                            class="h-screen w-screen object-cover transition-transform duration-300 group-hover:scale-105 p-0"
+                            width">
+                    </div>
+
+                </div>
               <div class="p-4">
                 <span class="text-xs bg-blue-400 text-white px-2 py-1 rounded-full">${product.category}</span>
                 <h3 class="font-semibold text-lg mt-2 clamp-2">${product.title}</h3>
@@ -188,7 +196,7 @@ function renderProducts(products){
         }
     }
 
-   
+    document.addEventListener("DOMContentLoaded", loadShopProducts);
 }
 
 renderProducts(products);
