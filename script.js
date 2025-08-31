@@ -212,7 +212,7 @@ function renderProducts(products){
         //<p class="col-span-full text-center text-gray-500">No products found.</p>`;
     }else {
         grid.innerHTML = products.map(product => `
-            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer">
+            <div class="bg-white border rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 group cursor-pointer onclick="goToProductDetail(${product.id})"">
                 <div class ="p-0">
                     <div class="aspect-square overflow-hidden rounded-t-lg">
                         <img 
@@ -244,11 +244,18 @@ function renderProducts(products){
     }
 
     document.addEventListener("DOMContentLoaded", loadShopProducts);
+
 }
 
+
+function goToProductDetail(id) {
+    // Navigate to productDetails.html with the product id
+    window.location.href = `productDetails.html?id=${id}`;
+}
+  
 //renderProducts(products);
 
-//category filter to be captured in the shop template select field
+//============================category filter to be captured in the shop template select field===============/
 function highlightActiveCategory(activeCategory) {
     const select = document.querySelector(".filter-category-select");
   
@@ -277,7 +284,7 @@ function highlightActiveCategory(activeCategory) {
     }
 }
    
-// Hook category buttons to filter products
+//==================================== Hook category buttons to filter products==================//
 document.querySelectorAll(".category_button button").forEach((btn) => {
     btn.addEventListener("click", () => {
       const categoryText = btn.textContent.trim().toLowerCase();
@@ -306,21 +313,194 @@ document.querySelectorAll(".category_button button").forEach((btn) => {
     });
 });
 
-//product details and cart logic
+//============================product details and cart logic======================================//
 let cart = JSON.parse(localStorage.getItem("cart")) ||[];
-let quantity = 1;
+let currentQuantity = 1;
 
 // Save cart and update cart count
 function updateCart() {
     localStorage.setItem("cart", JSON.stringify(cart));
-    const cartCount = document.getElementById("cartCount");
+  
+    const cartCount = document.getElementById("cart-count");
     if (cartCount) {
-      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartCount.textContent = totalItems;
     }
 }
 
 
 // Fetch Product
+async function loadProductById(){
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (!id) return;
+
+    try {
+        const res = await fetch(`https://fakestoreapi.com/products/${id}`);
+        const product = await res.json();
+
+        renderProductDetail(product);
+        // fetch related products
+        const relatedRes = await fetch(`https://fakestoreapi.com/products/category/${encodeURIComponent(product.category)}`);
+        const relatedProducts = await relatedRes.json();
+        renderRelatedProducts(relatedProducts.filter(p => p.id !== product.id));
+    }catch (err) {
+        console.error("Error loading product:", err);
+    }
+}
+
+window.onload = loadProductById;
+
+//============================function to render product details======================================//
+function renderProductDetail(product){
+    const container = document.getElementById("productDetails");
+
+    container.innerHTML =`
+    <div class="aspect-square overflow-hidden rounded-lg bg-muted prod_img">
+        <!-- Product Image -->
+        <img
+            src=${product.image}
+            alt=${product.title}
+            className="h-full w-full object-cover"
+        />
+
+    </div>
+
+    <!-- product info -->
+    <div class="space-y-6">
+        <div>
+          <span class="inline-block bg-gray-200 text-gray-700 px-3 py-1 rounded mb-2">
+            ${product.category}
+          </span>
+          <h1 class="text-3xl font-bold mb-4">${product.title}</h1>
+          ${renderRating(product.rating)}
+        </div>
+
+        <div class="text-4xl font-bold text-blue-600">
+          $${product.price.toFixed(2)}
+        </div>
+
+        <p class="text-gray-600 text-lg leading-relaxed">
+          ${product.description}
+        </p>
+
+        <!--=======quantity selector-->
+        <div class="flex items-center space-x-4">
+            <span class="font-medium">Quantity:</span>
+            <div class="flex items-center border rounded-md">
+                <button onclick="changeQuantity(-1)" 
+                    class="px-3 py-2 hover:bg-gray-100">-
+                </button>
+
+                <span id="quantityDisplay" class="px-4 py-2 font-medium">${currentQuantity}</span>
+                <button onclick="changeQuantity(1)" 
+                    class="px-3 py-2 hover:bg-gray-100">+
+                </button>
+            </div>
+        </div>
+
+        <!-- Add to Cart -->
+        <div class="flex space-x-4">
+            <button onclick="addToCart(${product.id}, '${product.title}', ${product.price}, '${product.image}')"
+                class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                🛒 Add to Cart
+            </button>
+
+            <button class="border px-6 py-3 rounded-lg hover:bg-gray-100">
+                Buy Now
+            </button>
+        </div>
+
+        <!-- Product Features -->
+        <div class="border rounded-lg p-6">
+            <h3 class="font-semibold mb-4">Product Features</h3>
+            <ul class="space-y-2 text-gray-600">
+                <li>✓ High quality materials</li>
+                <li>✓ Fast and secure shipping</li>
+                <li>✓ 30-day return policy</li>
+                <li>✓ Customer satisfaction guaranteed</li>
+            </ul>
+        </div>
+
+    </div>
+
+
+  `;
+
+  //document.addEventListener("DOMContentLoaded", loadProductById);
+}
+
+////Function to render ratings in star image
+function renderRating(rating) {
+    if (!rating) return "";
+  
+    let stars = "";
+    for (let i = 0; i < 5; i++) {
+      stars += `<span class="${i < Math.floor(rating.rate) ? "text-yellow-400" : "text-gray-300"}">★</span>`;
+    }
+  
+    return `
+      <div class="flex items-center space-x-2 mb-4">
+        <div>${stars}</div>
+        <span class="text-lg font-medium">${rating.rate}</span>
+        <span class="text-gray-500">(${rating.count} reviews)</span>
+      </div>
+    `;
+}
+
+//===============funtion to display related products//
+function renderRelatedProducts(products) {
+    const container = document.getElementById("relatedProducts");
+
+    container.innerHTML =`
+    ${products
+        .map(
+          (p) => `
+          <div class="border rounded-lg shadow-sm bg-white hover:shadow-lg transition p-4">
+            <img 
+                src="${p.image}" 
+                alt="${p.title}" 
+                class="h-40 mx-auto object-contain mb-4" 
+            />
+            <h3 class="font-semibold truncate">${p.title}</h3>
+            <p class="text-blue-600 font-bold">$${p.price.toFixed(2)}</p>
+            <button onclick="window.location.href='product.html?id=${p.id}'"
+              class="mt-2 w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              View
+            </button>
+          </div>
+        `
+        )
+        .join("")}
+    `;
+    
+
+}
+
+//function to add quantity
+function changeQuantity(amount) {
+    currentQuantity = Math.max(1, currentQuantity + amount);
+    document.getElementById("quantityDisplay").textContent = currentQuantity;
+}
+
+// Add to cart function
+function addToCart(id, title, price, image) {
+    const existingItem = cart.find(item => item.id === id);
+  
+    if (existingItem) {
+      existingItem.quantity += currentQuantity;
+    } else {
+      cart.push({ id, title, price, image, quantity: currentQuantity });
+    }
+  
+    updateCart();
+    alert(`${currentQuantity} × ${title} added to cart!`);
+
+    // Initialize badge on page load
+    document.addEventListener("DOMContentLoaded", updateCart);
+}
+
+
 
 
 
