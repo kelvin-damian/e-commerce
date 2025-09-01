@@ -4,6 +4,17 @@ const fakeStoreapi = 'https://fakestoreapi.com';
 
 let allProducts = [];
 
+//mobile menu
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+    
+    mobileMenu.classList.toggle('hidden');
+    hamburgerIcon.classList.toggle('hidden');
+    closeIcon.classList.toggle('hidden');
+}
+
 // get products
 async function fetchProducts() {
     try {
@@ -801,6 +812,12 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCart();
     const currentPath = window.location.pathname;
     console.log("Current path:", currentPath);
+
+    // Hamburger menu toggle
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', toggleMobileMenu);
+    }
 
     if (currentPath.includes("index.html") || currentPath === "/") {
         getFeaturedProducts();
